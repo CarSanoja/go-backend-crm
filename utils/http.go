@@ -1,11 +1,18 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
+	"io/ioutil"
+	"log"
+	"mime/multipart"
 	"net/http"
+	"net/http/httptest"
 	"os"
 	"strings"
+	"testing"
 )
 
 // Configuración de GODEBUG
@@ -166,22 +173,138 @@ func writeJSONResponse(w http.ResponseWriter, response Response) {
 }
 
 // Función principal
-// func main() {
-// 	config := &Config{
-// 		Port:     "8080",
-// 		UploadDir: "./uploads",
-// 	}
-// 	configureGODEBUG()
+func main() {
+	config := &Config{
+		Port:      "8080",
+		UploadDir: "./uploads",
+	}
+	configureGODEBUG()
 
-// 	// Creación del directorio de subida si no existe
-// 	if _, err := os.Stat(config.UploadDir); os.IsNotExist(err) {
-// 		err = os.MkdirAll(config.UploadDir, os.ModePerm)
-// 		if err != nil {
-// 			log.Fatalf("No se pudo crear el directorio de subida: %v", err)
-// 		}
-// 	}
+	// Creación del directorio de subida si no existe
+	if _, err := os.Stat(config.UploadDir); os.IsNotExist(err) {
+		err = os.MkdirAll(config.UploadDir, os.ModePerm)
+		if err != nil {
+			log.Fatalf("No se pudo crear el directorio de subida: %v", err)
+		}
+	}
 
-// 	handleRequests(config)
-// 	log.Printf("Servidor corriendo en el puerto %s\n", config.Port)
-// 	log.Fatal(http.ListenAndServe(":"+config.Port, nil))
-// }
+	handleRequests(config)
+	log.Printf("Servidor corriendo en el puerto %s\n", config.Port)
+	log.Fatal(http.ListenAndServe(":"+config.Port, nil))
+}
+
+// Funciones de prueba
+
+// TestHandleGet verifica que el manejador GET funcione correctamente.
+func TestHandleGet(t *testing.T) {
+	req, err := http.NewRequest("GET", "/get?param1=value1&param2=value2", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handleGet)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	expected := `{"status":200,"message":"GET exitoso","data":{"param1":["value1"],"param2":["value2"]}}`
+	if rr.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
+	}
+}
+
+// TestHandlePostJSON verifica que el manejador POST funcione correctamente para datos JSON.
+func TestHandlePostJSON(t *testing.T) {
+	var jsonStr = []byte(`{"name":"test","age":30}`)
+	req, err := http.NewRequest("POST", "/post", bytes.NewBuffer(jsonStr))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlePost)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	expected := `{"status":200,"message":"POST exitoso","data":{"age":30,"name":"test"}}`
+	if rr.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
+	}
+}
+
+// TestHandlePostForm verifica que el manejador POST funcione correctamente para datos de formulario.
+func TestHandlePostForm(t *testing.T) {
+	req, err := http.NewRequest("POST", "/post", strings.NewReader("name=test&age=30"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(handlePost)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	expected := `{"status":200,"message":"POST exitoso","data":{"age":["30"],"name":["test"]}}`
+	if rr.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
+	}
+}
+
+// TestHandleUpload verifica que el manejador de carga de archivos funcione correctamente.
+func TestHandleUpload(t *testing.T) {
+	config := &Config{UploadDir: "./uploads_test"}
+	if _, err := os.Stat(config.UploadDir); os.IsNotExist(err) {
+		os.MkdirAll(config.UploadDir, os.ModePerm)
+	}
+	defer os.RemoveAll(config.UploadDir)
+
+	fileContent := []byte("Este es el contenido del archivo de prueba.")
+	fileName := "testfile.txt"
+
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	part, err := writer.CreateFormFile("file", fileName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	part.Write(fileContent)
+	writer.Close()
+
+	req, err := http.NewRequest("POST", "/upload", body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+
+	rr := httptest.NewRecorder()
+	handler := handleUpload(config)
+	handler.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	expected := fmt.Sprintf(`{"status":200,"message":"Archivo subido exitosamente","data":"%s"}`, fileName)
+	if rr.Body.String() != expected {
+		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
+	}
+
+	uploadedFile, err := ioutil.ReadFile(config.UploadDir + "/" + fileName)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(uploadedFile, fileContent) {
+		t.Errorf("uploaded file content does not match: got %v want %v", string(uploadedFile), string(fileContent))
+	}
+}
