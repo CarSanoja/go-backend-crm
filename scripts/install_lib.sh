@@ -1,30 +1,28 @@
 #!/bin/bash
 
-MODULE_NAME=$1
+MODULE_NAME="go-backend-crm"
 
-if [ -z "$MODULE_NAME" ]; then
-  echo "Por favor, proporciona el nombre del módulo como parámetro."
-  exit 1
-fi
-
-echo "Inicializando módulo de Go..."
+echo "Initializing Go module..."
 go mod init $MODULE_NAME
 
-echo "Instalando dependencias necesarias..."
+echo "Installing necessary dependencies..."
 
-# Instalar gorilla/mux para enrutamiento de HTTP
+# Install gorilla/mux for HTTP routing
 go get github.com/gorilla/mux@latest
 
-# Instalar rs/cors para manejo de CORS
+# Install rs/cors for CORS handling
 go get github.com/rs/cors@latest
 
-# Instalar spf13/viper para manejo de configuración
+# Install spf13/viper for configuration management
 go get github.com/spf13/viper@latest
 
-# Instalar dgrijalva/jwt-go para manejo de JWT
+# Install dgrijalva/jwt-go for JWT handling
 go get github.com/dgrijalva/jwt-go@latest
 
-# Instalar stretchr/testify para pruebas
+# Install stretchr/testify for testing
 go get github.com/stretchr/testify@latest
 
-echo "Instalación completa."
+# Install excelize for Excel file manipulation
+go get github.com/xuri/excelize/v2
+
+echo "Installation complete."

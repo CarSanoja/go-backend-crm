@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Customer</title>
+</head>
+<body>
+    <h1>Delete Customer</h1>
+    <p>Are you sure you want to delete the following customer?</p>
+    <p>ID: {{.ID}}</p>
+    <p>Name: {{.Name}}</p>
+    <p>Email: {{.Email}}</p>
+    <p>Phone: {{.Phone}}</p>
+    <p>Address: {{.Address}}</p>
+    <form action="/customers/delete/{{.ID}}" method="post">
+        <input type="submit" value="Delete">
+    </form>
+    <a href="/customers">Back to Customer List</a>
+</body>
+</html>

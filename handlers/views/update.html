@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Customer</title>
+</head>
+<body>
+    <h1>Update Customer</h1>
+    <form action="/customers/update/{{.ID}}" method="post">
+        <label for="id">ID:</label><br>
+        <input type="text" id="id" name="id" value="{{.ID}}" readonly><br>
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" value="{{.Name}}"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" value="{{.Email}}"><br>
+        <label for="phone">Phone:</label><br>
+        <input type="text" id="phone" name="phone" value="{{.Phone}}"><br>
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" name="address" value="{{.Address}}"><br><br>
+        <input type="submit" value="Update Customer">
+    </form>
+    <a href="/customers">Back to Customer List</a>
+</body>
+</html>

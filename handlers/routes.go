@@ -1,26 +1,26 @@
 package handlers
 
 import (
+	"net/http"
+
 	"github.com/gorilla/mux"
 )
 
 func NewRouter() *mux.Router {
 	r := mux.NewRouter()
-
 	r.Use(loggingMiddleware)
 	r.Use(corsMiddleware)
 
-	// Rutas públicas
-	r.HandleFunc("/get", handleGet).Methods("GET")
-	r.HandleFunc("/post", handlePost).Methods("POST")
-	r.HandleFunc("/put", handlePut).Methods("PUT")
-	r.HandleFunc("/delete", handleDelete).Methods("DELETE")
-	r.HandleFunc("/upload", handleUpload).Methods("POST")
-
-	// Rutas seguras
-	secure := r.PathPrefix("/secure").Subrouter()
-	secure.Use(jwtAuth)
-	secure.HandleFunc("", handleSecure).Methods("GET")
+	r.HandleFunc("/", handleIndex).Methods("GET")
+	r.HandleFunc("/customers", HandleGetCustomers).Methods("GET")
+	r.HandleFunc("/customers/view/{id}", HandleGetCustomer).Methods("GET")
+	r.HandleFunc("/customers/add", HandleCreateCustomer).Methods("GET", "POST")
+	r.HandleFunc("/customers/update/{id}", HandleUpdateCustomer).Methods("GET", "POST")
+	r.HandleFunc("/customers/delete/{id}", HandleDeleteCustomer).Methods("GET", "POST")
 
 	return r
+}
+
+func handleIndex(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/customers", http.StatusSeeOther)
 }

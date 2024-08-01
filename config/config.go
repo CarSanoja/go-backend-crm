@@ -8,8 +8,8 @@ import (
 
 type Config struct {
 	Port      string
-	UploadDir string
 	JWTSecret string
+	CSVFile   string
 }
 
 var config Config
@@ -19,13 +19,13 @@ func LoadConfig() {
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Error al leer el archivo de configuración: %v", err)
+		log.Fatalf("Error reading config file: %v", err)
 	}
 
 	config = Config{
 		Port:      viper.GetString("port"),
-		UploadDir: viper.GetString("upload_dir"),
 		JWTSecret: viper.GetString("jwt_secret"),
+		CSVFile:   viper.GetString("csv_file"),
 	}
 }
 

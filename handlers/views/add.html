@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Customer</title>
+</head>
+<body>
+    <h1>Add Customer</h1>
+    <form action="/customers/add" method="post">
+        <label for="id">ID:</label><br>
+        <input type="text" id="id" name="id"><br>
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br>
+        <label for="phone">Phone:</label><br>
+        <input type="text" id="phone" name="phone"><br>
+        <label for="address">Address:</label><br>
+        <input type="text" id="address" name="address"><br><br>
+        <input type="submit" value="Add Customer">
+    </form>
+    <a href="/customers">Back to Customer List</a>
+</body>
+</html>

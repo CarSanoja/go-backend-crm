@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer List</title>
+</head>
+<body>
+    <h1>Customer List</h1>
+    <a href="/customers/add">Add Customer</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .}}
+            <tr>
+                <td>{{.ID}}</td>
+                <td>{{.Name}}</td>
+                <td>{{.Email}}</td>
+                <td>{{.Phone}}</td>
+                <td>{{.Address}}</td>
+                <td>
+                    <a href="/customers/view/{{.ID}}">View</a>
+                    <a href="/customers/update/{{.ID}}">Update</a>
+                    <a href="/customers/delete/{{.ID}}">Delete</a>
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+</body>
+</html>

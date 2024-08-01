@@ -1,6 +1,8 @@
-package main
+package errors
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type CustomError struct {
 	Message string
@@ -11,14 +13,17 @@ func (e *CustomError) Error() string {
 	return e.Message
 }
 
-func customError(message string, code int) error {
-	return &CustomError{Message: message, Code: code}
+func NewCustomError(message string, code int) error {
+	return &CustomError{
+		Message: message,
+		Code:    code,
+	}
 }
 
-func handleError(w http.ResponseWriter, err error) {
+func HandleError(w http.ResponseWriter, err error) {
 	if customErr, ok := err.(*CustomError); ok {
 		http.Error(w, customErr.Message, customErr.Code)
 	} else {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 	}
 }
