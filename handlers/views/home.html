@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM API Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.4em;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+        .endpoint {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the CRM API</h1>
+    <p>This API allows you to manage customer data for your CRM application. You can perform various operations such as creating, reading, updating, and deleting customer records. Below you'll find a list of available endpoints and instructions on how to use them.</p>
+
+    <h2>API Endpoints</h2>
+    
+    <div class="endpoint">
+        <h3>1. Get All Customers</h3>
+        <p><strong>Endpoint:</strong> <code>/customers</code></p>
+        <p><strong>Method:</strong> GET</p>
+        <p><strong>Description:</strong> Retrieve a list of all customers.</p>
+        <p><strong>Response:</strong> A JSON array of customer objects.</p>
+        <pre><code>
+Example Request:
+GET http://localhost:8080/customers
+
+Example Response:
+[
+    {
+        "id": "123e4567-e89b-12d3-a456-426614174000",
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "phone": "123-456-7890",
+        "address": "123 Main St"
+    },
+    ...
+]
+        </code></pre>
+    </div>
+    
+    <div class="endpoint">
+        <h3>2. Get a Single Customer</h3>
+        <p><strong>Endpoint:</strong> <code>/customers/{id}</code></p>
+        <p><strong>Method:</strong> GET</p>
+        <p><strong>Description:</strong> Retrieve a single customer by their ID.</p>
+        <p><strong>Response:</strong> A JSON object representing the customer.</p>
+        <pre><code>
+Example Request:
+GET http://localhost:8080/customers/123e4567-e89b-12d3-a456-426614174000
+
+Example Response:
+{
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "phone": "123-456-7890",
+    "address": "123 Main St"
+}
+        </code></pre>
+    </div>
+    
+    <div class="endpoint">
+        <h3>3. Add a New Customer</h3>
+        <p><strong>Endpoint:</strong> <code>/customers/add</code></p>
+        <p><strong>Method:</strong> POST</p>
+        <p><strong>Description:</strong> Add a new customer. The customer ID will be automatically generated.</p>
+        <p><strong>Request Body (JSON):</strong></p>
+        <pre><code>
+{
+    "name": "Jane Doe",
+    "email": "jane.doe@example.com",
+    "phone": "987-654-3210",
+    "address": "456 Elm St"
+}
+        </code></pre>
+        <p><strong>Response:</strong> A JSON object representing the newly created customer.</p>
+        <pre><code>
+Example Request:
+POST http://localhost:8080/customers/add
+Content-Type: application/json
+
+{
+    "name": "Jane Doe",
+    "email": "jane.doe@example.com",
+    "phone": "987-654-3210",
+    "address": "456 Elm St"
+}
+
+Example Response:
+{
+    "id": "223e4567-e89b-12d3-a456-426614174001",
+    "name": "Jane Doe",
+    "email": "jane.doe@example.com",
+    "phone": "987-654-3210",
+    "address": "456 Elm St"
+}
+        </code></pre>
+    </div>
+    
+    <div class="endpoint">
+        <h3>4. Update a Customer</h3>
+        <p><strong>Endpoint:</strong> <code>/customers/update/{id}</code></p>
+        <p><strong>Method:</strong> PUT</p>
+        <p><strong>Description:</strong> Update an existing customer's information by their ID.</p>
+        <p><strong>Request Body (JSON):</strong></p>
+        <pre><code>
+{
+    "name": "Jane Doe Updated",
+    "email": "jane.doe.updated@example.com",
+    "phone": "987-654-3210",
+    "address": "456 Elm St Updated"
+}
+        </code></pre>
+        <p><strong>Response:</strong> A JSON object representing the updated customer.</p>
+        <pre><code>
+Example Request:
+PUT http://localhost:8080/customers/update/223e4567-e89b-12d3-a456-426614174001
+Content-Type: application/json
+
+{
+    "name": "Jane Doe Updated",
+    "email": "jane.doe.updated@example.com",
+    "phone": "987-654-3210",
+    "address": "456 Elm St Updated"
+}
+
+Example Response:
+{
+    "id": "223e4567-e89b-12d3-a456-426614174001",
+    "name": "Jane Doe Updated",
+    "email": "jane.doe.updated@example.com",
+    "phone": "987-654-3210",
+    "address": "456 Elm St Updated"
+}
+        </code></pre>
+    </div>
+    
+    <div class="endpoint">
+        <h3>5. Delete a Customer</h3>
+        <p><strong>Endpoint:</strong> <code>/customers/delete/{id}</code></p>
+        <p><strong>Method:</strong> DELETE</p>
+        <p><strong>Description:</strong> Delete a customer by their ID.</p>
+        <p><strong>Response:</strong> A JSON object indicating success or failure.</p>
+        <pre><code>
+Example Request:
+DELETE http://localhost:8080/customers/delete/223e4567-e89b-12d3-a456-426614174001
+
+Example Response:
+{
+    "message": "Customer deleted"
+}
+        </code></pre>
+    </div>
+</body>
+</html>

@@ -7,9 +7,8 @@ import (
 )
 
 type Config struct {
-	Port      string
-	JWTSecret string
-	CSVFile   string
+	Port    string
+	CSVFile string
 }
 
 var config Config
@@ -23,9 +22,8 @@ func LoadConfig() {
 	}
 
 	config = Config{
-		Port:      viper.GetString("port"),
-		JWTSecret: viper.GetString("jwt_secret"),
-		CSVFile:   viper.GetString("csv_file"),
+		Port:    viper.GetString("port"),
+		CSVFile: viper.GetString("csv_file"),
 	}
 }
 

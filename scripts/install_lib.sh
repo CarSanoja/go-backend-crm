@@ -7,22 +7,13 @@ go mod init $MODULE_NAME
 
 echo "Installing necessary dependencies..."
 
-# Install gorilla/mux for HTTP routing
-go get github.com/gorilla/mux@latest
+# Install UUID package
+go get github.com/google/uuid
 
-# Install rs/cors for CORS handling
-go get github.com/rs/cors@latest
-
-# Install spf13/viper for configuration management
-go get github.com/spf13/viper@latest
-
-# Install dgrijalva/jwt-go for JWT handling
-go get github.com/dgrijalva/jwt-go@latest
-
-# Install stretchr/testify for testing
-go get github.com/stretchr/testify@latest
-
-# Install excelize for Excel file manipulation
-go get github.com/xuri/excelize/v2
+# Install other dependencies
+go get github.com/spf13/viper
+go get github.com/gorilla/mux
+go get github.com/rs/cors
+go get github.com/stretchr/testify
 
 echo "Installation complete."

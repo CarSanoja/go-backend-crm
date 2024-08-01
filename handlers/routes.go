@@ -11,16 +11,16 @@ func NewRouter() *mux.Router {
 	r.Use(loggingMiddleware)
 	r.Use(corsMiddleware)
 
-	r.HandleFunc("/", handleIndex).Methods("GET")
-	r.HandleFunc("/customers", HandleGetCustomers).Methods("GET")
-	r.HandleFunc("/customers/view/{id}", HandleGetCustomer).Methods("GET")
-	r.HandleFunc("/customers/add", HandleCreateCustomer).Methods("GET", "POST")
-	r.HandleFunc("/customers/update/{id}", HandleUpdateCustomer).Methods("GET", "POST")
-	r.HandleFunc("/customers/delete/{id}", HandleDeleteCustomer).Methods("GET", "POST")
+	r.HandleFunc("/", HomeHandler).Methods("GET")
+	r.HandleFunc("/customers", GetCustomers).Methods("GET")
+	r.HandleFunc("/customers/{id}", GetCustomer).Methods("GET")
+	r.HandleFunc("/customers/add", CreateCustomer).Methods("POST")
+	r.HandleFunc("/customers/update/{id}", UpdateCustomer).Methods("PUT")
+	r.HandleFunc("/customers/delete/{id}", DeleteCustomer).Methods("DELETE")
 
 	return r
 }
 
-func handleIndex(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/customers", http.StatusSeeOther)
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	respondWithHTML(w, "home.html", nil)
 }
